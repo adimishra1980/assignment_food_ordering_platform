@@ -6,4 +6,8 @@
     .nav-link {
         @apply font-semibold hover:underline decoration-2 underline-offset-4 transition-colors;
     }
+    
+    .menu-item{
+        @apply container rounded-xl flex flex-col flex-shrink-0  transition-transform hover:scale-90 duration-300 shadow-[0_4px_4px_-2px_rgba(0,0,0,0.25)]
+    }
 }

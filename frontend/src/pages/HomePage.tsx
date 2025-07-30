@@ -12,7 +12,7 @@ export default function HomePage() {
         <HeroSection />
         <Categories />
 
-        <MenuSection/>
+          <MenuSection />
       </main>
     </div>
   );

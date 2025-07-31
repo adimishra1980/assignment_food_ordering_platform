@@ -26,8 +26,8 @@ const MenuSection = () => {
   const menu = useMenu();
 
   return (
-    <div className="min-h-screen w-ful px-4 sm:px-8 pb-8">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-8 ">
+    <div className="min-h-screen w-[80%] mx-auto px-4 sm:px-8 pb-8">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10 ">
         {menu?.map((item) => (
           <MenuItem
             key={item.id}

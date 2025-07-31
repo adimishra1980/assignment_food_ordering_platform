@@ -1,7 +1,7 @@
 
 const PageHeader = () => {
   return (
-    <header className="bg-[#FFFFFF] h-20 flex items-center text-black p-4 shadow-2xl shadow-zinc-200">
+    <header className="bg-[#FFFFFF] h-20 flex items-center text-black p-4 shadow-2xl shadow-zinc-200 sticky top-0 z-10">
       <div className="container mx-auto flex items-center justify-around">
         <a href="/" className="text-2xl font-bold">JUST ORDER</a>
         <nav className="">

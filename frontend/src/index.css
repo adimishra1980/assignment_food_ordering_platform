@@ -8,6 +8,6 @@
     }
     
     .menu-item{
-        @apply container rounded-xl flex flex-col flex-shrink-0  transition-transform hover:scale-90 duration-300 shadow-[0_4px_4px_-2px_rgba(0,0,0,0.25)]
+        @apply container rounded-xl flex flex-col flex-shrink-0  transition-transform hover:scale-95 duration-300 shadow-[0_4px_4px_-2px_rgba(0,0,0,0.25)]
     }
 }

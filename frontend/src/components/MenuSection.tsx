@@ -31,9 +31,7 @@ const MenuSection = () => {
         {menu?.map((item) => (
           <MenuItem
             key={item.id}
-            name={item.name}
-            image_url={item.image_url}
-            price={item.price}
+            item={item}
           />
         ))}
       </div>

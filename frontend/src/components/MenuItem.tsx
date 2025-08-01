@@ -1,28 +1,48 @@
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../app/hooks";
+import { addToCart } from "../slices/cartSlice";
+import type { MenuItem } from "./MenuSection";
+import { Link } from "react-router-dom";
+
 interface MenuItemProps {
-  name: string;
-  price: number;
-  image_url: string;
+  item: MenuItem;
 }
 
-const MenuItem = ({ name, price, image_url }: MenuItemProps) => {
+const MenuItem = ({ item }: MenuItemProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = () => {
+    try {
+      dispatch(addToCart(item));
+      console.log("item added to the cart")
+      toast.success("Item added to cart");
+    } catch (error) {
+      console.log("error", error);
+      toast.error("Failed to add item to the cart");
+    }
+  };
+
   return (
-    <a href="" className="menu-item">
+    <Link to={""} className="menu-item">
       <div>
         <img
-          src={image_url}
-          alt={name}
+          src={item.image_url}
+          alt={item.name}
           className="w-[80vh] h-[25vh] object-cover rounded-xl"
         />
       </div>
       <div className="mt-3 mx-3">
-        <h3 className="text-xl font-semibold ">{name}</h3>
-        <h3 className="text-xl font-semibold">₹ {price}</h3>
+        <h3 className="text-xl font-semibold ">{item.name}</h3>
+        <h3 className="text-xl font-semibold">₹ {item.price}</h3>
       </div>
 
-      <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold">
+      <button
+        onClick={handleAddToCart}
+        className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold"
+      >
         Add to Cart
       </button>
-    </a>
+    </Link>
   );
 };
 

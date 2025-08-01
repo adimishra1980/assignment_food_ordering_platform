@@ -7,6 +7,7 @@ import OrderStatusPage from "./pages/OrderStatusPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { store } from "./app/store.ts";
 import { Provider } from "react-redux";
+import CartPage from "./pages/CartPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/order/:orderId",
     element: <OrderStatusPage />,
   },
+  {
+    path: "/checkout",
+    element: <CartPage/>
+  }
 ]);
 
 createRoot(document.getElementById("root")!).render(

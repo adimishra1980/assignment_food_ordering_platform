@@ -1,8 +1,15 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../app/store";
 import PageHeader from "../components/PageHeader";
-import type { CartItem } from "../slices/cartSlice";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeItemFromCart,
+  type CartItem,
+} from "../slices/cartSlice";
 import { formatIndianCurrency } from "../utils/formatIndianCurrency";
+import { Minus, Plus } from "lucide-react";
+import { useAppDispatch } from "../app/hooks";
 
 export default function CartPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -11,6 +18,8 @@ export default function CartPage() {
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  const dispatch = useAppDispatch();
 
   const renderCartItem = (item: CartItem) => (
     <div
@@ -29,9 +38,26 @@ export default function CartPage() {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <a href=""></a>
-        <p>Qty: {item.quantity}</p>
-        <button className="text-red-500 hover:text-red-700 font-bold">
+        <div className=" flex items-center gap-3 px-3 py-1 border border-gray-400">
+          <button
+            onClick={() => dispatch(decreaseQuantity(item.id))}
+            className=" text-red-400"
+          >
+            <Minus />
+          </button>
+          <p className="font-semibold w-3 text-center">{item.quantity}</p>
+          <button
+            onClick={() => dispatch(increaseQuantity(item.id))}
+            className=" text-green-500"
+          >
+            <Plus />
+          </button>
+        </div>
+
+        <button
+          onClick={() => dispatch(removeItemFromCart(item.id))}
+          className="text-red-500 hover:text-red-700 font-bold"
+        >
           Remove
         </button>
       </div>
@@ -57,6 +83,10 @@ export default function CartPage() {
               <div className="flex justify-between mb-2">
                 <p>Subtotal</p>
                 <p>{formatIndianCurrency(subtotal)}</p>
+              </div>
+              <div className="flex justify-between mb-2">
+                <p>Discount</p>
+                <p>₹0.00</p>
               </div>
               <div className="flex justify-between mb-4">
                 <p>Taxes & Fees</p>

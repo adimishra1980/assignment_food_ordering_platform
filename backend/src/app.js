@@ -14,8 +14,10 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 
-app.get("/", (_, res) => {
-  res.json({ message: "Backend server is gooddd" });
+
+// Health check
+app.get("/health", (req, res) => {
+  res.status(200).send({ status: "OK" });
 });
 
-export default app
+export default app;

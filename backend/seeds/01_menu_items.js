@@ -1,0 +1,104 @@
+export async function seed(knex) {
+  // Deletes ALL existing entries
+  await knex("menu_items").del();
+
+  // Inserts seed entries
+  await knex("menu_items").insert([
+    {
+      id: 1,
+      name: "Margherita Pizza",
+      price: 999,
+      category: "Pizza",
+      image_url:
+        "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 2,
+      name: "Pepperoni Pizza",
+      price: 1299,
+      category: "Pizza",
+      image_url:
+        "https://images.unsplash.com/photo-1564128442383-9201fcc740eb?q=80&w=1531&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 3,
+      name: "Caesar Salad",
+      price: 799,
+      category: "Salads",
+      image_url:
+        "https://images.unsplash.com/photo-1605291535065-e1d52d2b264a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 4,
+      name: "Chicken Wings",
+      price: 1099,
+      category: "Starters",
+      image_url:
+        "https://images.unsplash.com/photo-1600555379765-f82335a7b1b0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 5,
+      name: "Veggie Burger",
+      price: 899,
+      category: "Burgers",
+      image_url:
+        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 6,
+      name: "Cheeseburger",
+      price: 1099,
+      category: "Burgers",
+      image_url:
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 7,
+      name: "Fish Tacos",
+      price: 1199,
+      category: "Tacos",
+      image_url:
+        "https://images.unsplash.com/photo-1512838243191-e81e8f66f1fd?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 8,
+      name: "Beef Tacos",
+      price: 1299,
+      category: "Tacos",
+      image_url:
+        "https://plus.unsplash.com/premium_photo-1661730314652-911662c0d86e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 9,
+      name: "Greek Salad",
+      price: 749,
+      category: "Salads",
+      image_url:
+        "https://images.unsplash.com/photo-1636654931290-418d20865e03?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 10,
+      name: "French Fries",
+      price: 399,
+      category: "Sides",
+      image_url:
+        "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 11,
+      name: "Onion Rings",
+      price: 449,
+      category: "Sides",
+      image_url:
+        "https://images.unsplash.com/photo-1645066803695-f0dbe2c33e42?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 12,
+      name: "Chocolate Cake",
+      price: 699,
+      category: "Desserts",
+      image_url:
+        "https://images.unsplash.com/photo-1623888884968-b5a895f882dc?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  ]);
+}

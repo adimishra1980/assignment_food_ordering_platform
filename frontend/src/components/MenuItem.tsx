@@ -1,11 +1,11 @@
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../app/hooks";
 import { addToCart } from "../slices/cartSlice";
-import type { MenuItem } from "./MenuSection";
+import type { IMenuItem } from "../types/type";
 import { Link } from "react-router-dom";
 
 interface MenuItemProps {
-  item: MenuItem;
+  item: IMenuItem;
 }
 
 const MenuItem = ({ item }: MenuItemProps) => {

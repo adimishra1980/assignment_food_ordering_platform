@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "../slices/cartSlice";
 import { loadState, saveState } from "../utils/localStorage";
 import throttle from "lodash.throttle";
+import cartReducer from "../slices/cartSlice";
+import menuReducer from "../slices/menuSlice";
 
 // Load the initial state from localStorage
 const preloadedState = loadState();
@@ -9,6 +10,7 @@ const preloadedState = loadState();
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    menu: menuReducer,
   },
   preloadedState, // Set the initial state of the store
 });

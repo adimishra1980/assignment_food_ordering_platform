@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage.tsx";
 import { store } from "./app/store.ts";
 import { Provider } from "react-redux";
 import CartPage from "./pages/CartPage.tsx";
+import CheckoutPage from "./pages/CheckoutPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
     element: <OrderStatusPage />,
   },
   {
-    path: "/checkout",
+    path: "/cart",
     element: <CartPage/>
+  },
+  {
+    path: "/checkout",
+    element: <CheckoutPage/>
   }
 ]);
 

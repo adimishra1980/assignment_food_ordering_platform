@@ -29,7 +29,7 @@ const PageHeader = () => {
               </a>
             </li>
             <li>
-              <a href="/checkout" className="nav-link flex items-center gap-2 relative">
+              <a href="/cart" className="nav-link flex items-center gap-2 relative">
                 <span><ShoppingCart /></span>
                 <span>Cart</span>
 

@@ -10,6 +10,7 @@ import {
 import { formatIndianCurrency } from "../utils/formatIndianCurrency";
 import { Minus, Plus } from "lucide-react";
 import { useAppDispatch } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -20,6 +21,7 @@ export default function CartPage() {
   );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   const renderCartItem = (item: CartItem) => (
     <div
@@ -96,7 +98,9 @@ export default function CartPage() {
                 <p>Total</p>
                 <p>{formatIndianCurrency(subtotal)}</p>
               </div>
-              <button className="w-full mt-6 bg-[#FF3F6C] text-white py-3 rounded-lg font-bold hover:bg-[#e0224f]">
+              <button 
+              onClick={() => navigate('/checkout')}
+              className="w-full mt-6 bg-[#FF3F6C] text-white py-3 rounded-lg font-bold hover:bg-[#e0224f]">
                 Proceed to Checkout
               </button>
             </div>

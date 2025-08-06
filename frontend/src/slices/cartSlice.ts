@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { MenuItem } from "../components/MenuSection";
+import type { IMenuItem } from "../types/type";
 
-export interface CartItem extends MenuItem {
+export interface CartItem extends IMenuItem {
   quantity: number;
 }
 
@@ -18,7 +18,7 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     // this reducers helps in adding a item to the cart
-    addToCart: (state, action: PayloadAction<MenuItem>) => {
+    addToCart: (state, action: PayloadAction<IMenuItem>) => {
       const itemToAdd = action.payload;
       const existingItem = state.items.find((item) => item.id === itemToAdd.id);
 

@@ -7,6 +7,8 @@ import {
   jsonRpcSuccessResponse,
 } from "./utils/jsonRpcResponse.js";
 
+import { getMenu } from "./services/menuService.js";
+
 const app = express();
 
 // Initialize Knex to connect to the database
@@ -34,7 +36,7 @@ app.post("/rpc", async (req, res) => {
 
     switch (method) {
       case "getMenu":
-        result = await db("menu_items").select("*");
+        result = await getMenu(db)
 
         return res.json(jsonRpcSuccessResponse(id, result));
 

@@ -1,7 +1,16 @@
 import express from "express";
 import cors from "cors";
+import knex from "knex";
+import knexConfig from "../knexfile.js";
+import {
+  jsonRpcErrorResponse,
+  jsonRpcSuccessResponse,
+} from "./utils/jsonRpcResponse.js";
 
 const app = express();
+
+// Initialize Knex to connect to the database
+const db = knex(knexConfig.development);
 
 app.use(
   cors({
@@ -9,11 +18,37 @@ app.use(
     credentials: true,
   })
 );
-
 app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
 
+app.post("/rpc", async (req, res) => {
+  const { jsonrpc, method, params, id } = req.body;
+
+  if (jsonrpc !== "2.0" || !method || !id) {
+    return res
+      .status(400)
+      .json(jsonRpcErrorResponse(-32600, "Invalid Request", id));
+  }
+
+  try {
+    let result;
+
+    switch (method) {
+      case "getMenu":
+        result = await db("menu_items").select("*");
+
+        return res.json(jsonRpcSuccessResponse(id, result));
+
+      default:
+        return res
+          .status(400)
+          .json(jsonRpcErrorResponse(-32601, "Method not found", id));
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json(jsonRpcErrorResponse(-32000, "Server error", id, error.message));
+  }
+});
 
 // Health check
 app.get("/health", (req, res) => {

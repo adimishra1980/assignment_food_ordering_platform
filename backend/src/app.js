@@ -8,6 +8,7 @@ import {
 } from "./utils/jsonRpcResponse.js";
 
 import { getMenu } from "./services/menuService.js";
+import { placeOrder } from "./services/orderService.js";
 
 const app = express();
 
@@ -37,8 +38,11 @@ app.post("/rpc", async (req, res) => {
     switch (method) {
       case "getMenu":
         result = await getMenu(db)
-
         return res.json(jsonRpcSuccessResponse(id, result));
+      
+      case "placeOrder":
+        result = await placeOrder(db, params)
+        return res.json(jsonRpcSuccessResponse(result, id));
 
       default:
         return res

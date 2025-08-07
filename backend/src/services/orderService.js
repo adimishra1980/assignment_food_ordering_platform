@@ -1,11 +1,4 @@
-/**
- * Places a new order by creating records in the 'orders' and 'order_items' tables.
- * @param {import('knex').Knex} db - The Knex database instance.
- * @param {Object} params - The parameters for placing an order.
- * @param {Object} params.customer - Customer details.
- * @param {Array<Object>} params.items - The items in the order.
- * @returns {Promise<Object>} A promise that resolves to an object containing the new order ID.
- */
+
 
 export const placeOrder = async (db, { customer, items }) => {
   // Use a transaction to ensure all database operations succeed or fail together.

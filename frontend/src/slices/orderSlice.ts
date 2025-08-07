@@ -26,11 +26,12 @@ const initialState: OrderState = {
 export const placeOrder = createAsyncThunk(
   "order/placeOrder",
   async (orderData: PlaceOrderParams) => {
-    const response = await rpcClient<{ orderId: number }, PlaceOrderParams>(
+    const response = await rpcClient<number, PlaceOrderParams>(
       "placeOrder",
       orderData
     );
-    return response.orderId;
+     console.log('placeOrder response:', response);
+    return response;
   }
 );
 

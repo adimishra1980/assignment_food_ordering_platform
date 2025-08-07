@@ -9,6 +9,7 @@
 
 export const placeOrder = async (db, { customer, items }) => {
   // Use a transaction to ensure all database operations succeed or fail together.
+
   const newOrderId = await db.transaction(async (trx) => {
     // 1. Calculate the total amount on the server-side for security.
     const itemIds = items.map((item) => item.id);
@@ -20,6 +21,7 @@ export const placeOrder = async (db, { customer, items }) => {
         throw new Error(`Menu item with id ${cartItem.id} not found.`);
       return total + parseFloat(menuItem.price) * cartItem.quantity;
     }, 0);
+
 
     // 2. Insert into the 'orders' table.
     const [newOrder] = await trx("orders")

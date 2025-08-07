@@ -6,12 +6,20 @@ import type { RootState } from "../app/store";
 import { placeOrder } from "../slices/orderSlice";
 import { clearCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
+import OrderSummary from "../components/OrderSummary";
 
 export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
+  });
+
+  // for tracking fields have been touched to show errors only after interaction
+  const [touched, setTouched] = useState({
+    name: false,
+    phone: false,
+    address: false,
   });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -23,10 +31,18 @@ export default function CheckoutPage() {
 
   const isLoading = orderStatus === "loading";
 
-  const isFormValid =
-    formData.name.trim() !== "" &&
-    formData.phone.trim() !== "" &&
-    formData.address.trim() !== "";
+  // Validation rules
+  const errors = {
+    name: !formData.name.trim() ? "Name is required." : "",
+    phone: !formData.phone.trim()
+      ? "Phone number is required."
+      : !/^\+?[0-9\s\-()]{10,15}$/.test(formData.phone)
+      ? "Enter a valid phone number."
+      : "",
+    address: !formData.address.trim() ? "Address is required." : "",
+  };
+
+  const isFormValid = !errors.name && !errors.address && !errors.phone;
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,9 +51,20 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   }
 
+  function handleBlur(
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { id } = e.target;
+    setTouched((prev) => ({ ...prev, [id]: true }));
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      // Mark all fields as touched to show errors on submit if invalid
+      setTouched({ name: true, phone: true, address: true });
+      return;
+    }
 
     const orderData = {
       customer: {
@@ -50,17 +77,19 @@ export default function CheckoutPage() {
         quantity: item.quantity,
       })),
     };
-
     dispatch(placeOrder(orderData));
   }
 
   useEffect(() => {
-    if(orderStatus === 'succeeded' && currentOrderId){
-      toast.success("Order Placed Successfully")
-      dispatch(clearCart())
-      navigate(`order/${currentOrderId}`)
+    if (orderStatus === "succeeded" && currentOrderId) {
+      dispatch(clearCart());
+      navigate(`/order/${currentOrderId}`);
+      toast.success("Order Placed Successfully");
     }
-  }, [currentOrderId, orderStatus, dispatch, navigate])
+  }, [currentOrderId, orderStatus, dispatch, navigate]);
+
+  // Style for error messages
+  const errorClass = "text-red-600 text-sm mt-1";
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -68,14 +97,8 @@ export default function CheckoutPage() {
       <main className="container mx-auto p-8 flex-grow">
         <h1 className="text-4xl font-bold mb-8 text-center">Checkout</h1>
         <div className="bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto flex flex-col md:flex-row gap-8">
-          {/* Order summary placeholder */}
-          <section className="md:w-1/2 border-r pr-6">
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            {/* TODO: Render cart items summary here */}
-            <p className="text-gray-700">
-              Your selected items will appear here.
-            </p>
-          </section>
+          {/* Order Summary */}
+          <OrderSummary />
 
           {/* Checkout form */}
           <section className="md:w-1/2">
@@ -92,12 +115,20 @@ export default function CheckoutPage() {
                   id="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onBlur={handleBlur}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    touched.name && errors.name
+                      ? "border-red-600 focus:ring-red-600"
+                      : "border-gray-300 focus:ring-blue-500"
+                  }`}
                   placeholder="John Doe"
                   required
                   autoComplete="name"
                   disabled={isLoading}
                 />
+                {touched.name && errors.name && (
+                  <p className={errorClass}>{errors.name}</p>
+                )}
               </div>
 
               <div className="mb-6">
@@ -112,7 +143,12 @@ export default function CheckoutPage() {
                   id="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onBlur={handleBlur}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    touched.phone && errors.phone
+                      ? "border-red-600 focus:ring-red-600"
+                      : "border-gray-300 focus:ring-blue-500"
+                  }`}
                   placeholder="+1 (555) 123-4567"
                   required
                   autoComplete="tel"
@@ -120,6 +156,9 @@ export default function CheckoutPage() {
                   disabled={isLoading}
                   title="Enter a valid phone number"
                 />
+                {touched.phone && errors.phone && (
+                  <p className={errorClass}>{errors.phone}</p>
+                )}
               </div>
 
               <div className="mb-8">
@@ -134,11 +173,19 @@ export default function CheckoutPage() {
                   rows={4}
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onBlur={handleBlur}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    touched.address && errors.address
+                      ? "border-red-600 focus:ring-red-600"
+                      : "border-gray-300 focus:ring-blue-500"
+                  }`}
                   placeholder="123 Main St, Apt 4B, City, Country"
                   required
                   disabled={isLoading}
                 ></textarea>
+                {touched.address && errors.address && (
+                  <p className={errorClass}>{errors.address}</p>
+                )}
               </div>
 
               <button

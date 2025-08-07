@@ -15,10 +15,10 @@ export const placeOrder = async (db, { customer, items }) => {
     const menuItems = await trx("menu_items").whereIn("id", itemIds);
 
     const totalAmount = items.reduce((total, cartItem) => {
-      const menuItem = menuItems.find((item) => item.id === cartItem.id); // here we are matching the cartItem which is id to the menuItems so that we can get all the details about the menu like price, qty etc
+      const menuItem = menuItems.find((item) => item.id === cartItem.id); // here we are matching the cartItem which is id to the menuItems so that we can get all the details about the menu like price, quantity etc
       if (!menuItem)
         throw new Error(`Menu item with id ${cartItem.id} not found.`);
-      return total + parseFloat(menuItem.price) * cartItem.qty;
+      return total + parseFloat(menuItem.price) * cartItem.quantity;
     }, 0);
 
     // 2. Insert into the 'orders' table.

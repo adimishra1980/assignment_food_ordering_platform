@@ -7,13 +7,13 @@ interface JsonRpcResponse<TResult> {
   error?: {
     code: number;
     message: string;
-    data?: any;
+    data?: string;
   };
 }
 
-export async function rpcClient<TResult = unknown>(
+export async function rpcClient<TResult = unknown,  P extends Record<string, any> | undefined = undefined>(
   method: string,
-  params?: Record<string, unknown>
+  params?: P
 ): Promise<TResult> {
   const requestId = Date.now(); // Unique-enough ID per frontend session
   const response = await fetch(API_URL, {

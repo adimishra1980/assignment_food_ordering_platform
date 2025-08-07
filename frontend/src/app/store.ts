@@ -3,6 +3,7 @@ import { loadState, saveState } from "../utils/localStorage";
 import throttle from "lodash.throttle";
 import cartReducer from "../slices/cartSlice";
 import menuReducer from "../slices/menuSlice";
+import orderReducer from "../slices/orderSlice"
 
 // Load the initial state from localStorage
 const preloadedState = loadState();
@@ -11,6 +12,7 @@ export const store = configureStore({
   reducer: {
     cart: cartReducer,
     menu: menuReducer,
+    order: orderReducer
   },
   preloadedState, // Set the initial state of the store
 });

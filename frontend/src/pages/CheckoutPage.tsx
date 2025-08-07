@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
+import type { RootState } from "../app/store";
+import { placeOrder } from "../slices/orderSlice";
+import { clearCart } from "../slices/cartSlice";
+import { toast } from "react-toastify";
 
 export default function CheckoutPage() {
-  // Local form state placeholders
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
   });
-  const [submitting, setSubmitting] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  // Simple form validation check (extend as needed)
+  const { items: cartItems } = useAppSelector((state: RootState) => state.cart);
+  const { status: orderStatus, currentOrderId } = useAppSelector(
+    (state: RootState) => state.order
+  );
+
+  const isLoading = orderStatus === "loading";
+
   const isFormValid =
     formData.name.trim() !== "" &&
     formData.phone.trim() !== "" &&
@@ -27,16 +39,28 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!isFormValid) return;
 
-    setSubmitting(true);
-    // TODO: Add form submission logic (RPC placeOrder call)
+    const orderData = {
+      customer: {
+        name: formData.name,
+        phone: formData.phone,
+        address: formData.address,
+      },
+      items: cartItems.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+      })),
+    };
 
-    // Simulate submission delay
-    setTimeout(() => {
-      setSubmitting(false);
-      alert("Order placed successfully! (Demo)");
-      // TODO: Redirect or show confirmation
-    }, 1500);
+    dispatch(placeOrder(orderData));
   }
+
+  useEffect(() => {
+    if(orderStatus === 'succeeded' && currentOrderId){
+      toast.success("Order Placed Successfully")
+      dispatch(clearCart())
+      navigate(`order/${currentOrderId}`)
+    }
+  }, [currentOrderId, orderStatus, dispatch, navigate])
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -72,7 +96,7 @@ export default function CheckoutPage() {
                   placeholder="John Doe"
                   required
                   autoComplete="name"
-                  disabled={submitting}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -93,7 +117,7 @@ export default function CheckoutPage() {
                   required
                   autoComplete="tel"
                   pattern="^\+?[0-9\s\-()]{7,15}$"
-                  disabled={submitting}
+                  disabled={isLoading}
                   title="Enter a valid phone number"
                 />
               </div>
@@ -113,20 +137,20 @@ export default function CheckoutPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="123 Main St, Apt 4B, City, Country"
                   required
-                  disabled={submitting}
+                  disabled={isLoading}
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                disabled={!isFormValid || submitting}
+                disabled={!isFormValid || isLoading}
                 className={`w-full py-3 rounded-md font-bold text-white ${
-                  isFormValid && !submitting
+                  isFormValid && !isLoading
                     ? "bg-blue-600 hover:bg-blue-700"
                     : "bg-gray-400 cursor-not-allowed"
                 } transition-colors duration-200`}
               >
-                {submitting ? "Placing Order..." : "Place Order"}
+                {isLoading ? "Placing Order..." : "Place Order"}
               </button>
             </form>
           </section>

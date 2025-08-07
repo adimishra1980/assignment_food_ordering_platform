@@ -8,7 +8,7 @@ import {
 } from "./utils/jsonRpcResponse.js";
 
 import { getMenu } from "./services/menuService.js";
-import { placeOrder } from "./services/orderService.js";
+import { listOrders, placeOrder } from "./services/orderService.js";
 
 const app = express();
 
@@ -42,7 +42,11 @@ app.post("/rpc", async (req, res) => {
       
       case "placeOrder":
         result = await placeOrder(db, params)
-        return res.json(jsonRpcSuccessResponse(result, id));
+        return res.json(jsonRpcSuccessResponse(id, result));
+      
+      case "listOrders":
+        result = await listOrders(db, params)
+        return res.json(jsonRpcSuccessResponse(id, result))
 
       default:
         return res

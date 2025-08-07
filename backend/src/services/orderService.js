@@ -54,3 +54,21 @@ export const placeOrder = async (db, { customer, items }) => {
 
   return {orderId: newOrderId}
 };
+
+
+export const listOrders = async(db, params) => {
+  
+  let query = db('orders').select('*');
+
+  if(params?.status){
+    query = query.where('status', params.status)
+  }
+
+  if(params?.limit){
+    query = query.limit(params.limit)
+  }
+
+  query = query.orderBy('created_at', 'asc');
+
+  return query;
+}

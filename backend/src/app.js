@@ -6,11 +6,19 @@ import {
   jsonRpcErrorResponse,
   jsonRpcSuccessResponse,
 } from "./utils/jsonRpcResponse.js";
+import http from "http"
+import { WebSocketServer } from "ws";
 
 import { getMenu } from "./services/menuService.js";
 import { listOrders, placeOrder } from "./services/orderService.js";
+import { InitializeWebSocket } from "./websocket.js";
 
 const app = express();
+// Create HTTP server and bind Express app
+export const server = http.createServer(app);
+
+// Initialize WebSocket and get the wss instance
+const wss = InitializeWebSocket(server)
 
 // Initialize Knex to connect to the database
 const db = knex(knexConfig.development);

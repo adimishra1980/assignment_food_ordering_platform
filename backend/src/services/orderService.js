@@ -22,7 +22,6 @@ export const placeOrder = async (db, { customer, items }) => {
       return total + parseFloat(menuItem.price) * cartItem.quantity;
     }, 0);
 
-
     // 2. Insert into the 'orders' table.
     const [newOrder] = await trx("orders")
       .insert({
@@ -49,26 +48,24 @@ export const placeOrder = async (db, { customer, items }) => {
     // 4. Insert into the 'order_items' table.
     await trx("order_items").insert(orderItemsToInsert);
 
-    return orderId
+    return orderId;
   });
 
-  return {orderId: newOrderId}
+  return { orderId: newOrderId };
 };
 
+export const listOrders = async (db, params) => {
+  let query = db("orders").select("*");
 
-export const listOrders = async(db, params) => {
-  
-  let query = db('orders').select('*');
-
-  if(params?.status){
-    query = query.where('status', params.status)
+  if (params?.status) {
+    query = query.where("status", params.status);
   }
 
-  if(params?.limit){
-    query = query.limit(params.limit)
+  if (params?.limit) {
+    query = query.limit(params.limit);
   }
 
-  query = query.orderBy('created_at', 'asc');
+  query = query.orderBy("created_at", "asc");
 
   return query;
-}
+};

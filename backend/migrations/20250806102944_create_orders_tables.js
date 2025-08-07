@@ -8,7 +8,6 @@ export function up(knex) {
       table.increments("id").primary();
       table.string("customer_name").notNullable();
       table.string("customer_phone").notNullable();
-      table.string("customer_address").notNullable();
       table.decimal("total_amount", 10, 2).notNullable();
       table.string("status").notNullable().defaultTo("PENDING");
       table.string("payment_ref");

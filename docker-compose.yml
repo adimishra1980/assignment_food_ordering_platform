@@ -1,16 +1,35 @@
+version: "3.8"
 
 services:
+  # Postgres Database Service
   postgres:
     image: postgres:15
-    container_name: food_ordering_db
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: food_ordering_app
+    env_file:
+      - ./backend/.env # DB credentials & name from backend/.env
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+
+  # Backend Service
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/src:/usr/src/app/src
+
+  # Frontend Service
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
 
 volumes:
-  postgres_data:
+  db_data:

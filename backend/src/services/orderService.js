@@ -1,3 +1,5 @@
+import { jsonRpcErrorResponse } from "../utils/jsonRpcResponse.js";
+
 export const placeOrder = async (db, { customer, items }) => {
   // Use a transaction to ensure all database operations succeed or fail together.
 
@@ -86,5 +88,49 @@ export const listOrders = async (db, params) => {
     };
   });
 
-  return ordersWithItems
+  return ordersWithItems;
+};
+
+async function getOrderWithItems(orderId, trx = db) {
+  if (!orderId) return null;
+
+  const order = await trx("orders").where({ id: orderId }).first();
+  if (!order) return null;
+
+  const items = await trx("order_items")
+    .join("menu_items", "order_items.menu_item_id", "=", "menu_items.id")
+    .select("order_items.*", "menu_items.name")
+    .where({ order_id: orderId });
+
+  return { ...order, items };
+}
+
+export const acceptOrder = async (db, { orderId }) => {
+  const [updatedOrder] = await db("orders")
+    .where("id", orderId)
+    .update({ status: "ACCEPTED" })
+    .returning("*");
+
+  if (!updatedOrder) {
+    throw new Error(`Order #${orderId} not found or cannot be accepted.`);
+  }
+
+  console.log("order accepted", updatedOrder);
+
+   // After updating, fetch the full order with its items
+  return getOrderWithItems(updatedOrder.id, db);
+};
+
+export const updatedOrderStatus = async (db, { orderId, status }) => {
+  const [updatedOrder] = await db("orders")
+    .where("id", orderId)
+    .update({ status: status })
+    .returning("*");
+
+  if (!updatedOrder) {
+    throw new Error(`Order #${orderId} not found.`);
+  }
+  console.log("order updated", updatedOrder);
+
+  return getOrderWithItems(updatedOrder.id, db);
 };

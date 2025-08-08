@@ -10,7 +10,7 @@ import http from "http";
 import { WebSocketServer } from "ws";
 
 import { getMenu } from "./services/menuService.js";
-import { listOrders, placeOrder } from "./services/orderService.js";
+import { acceptOrder, listOrders, placeOrder, updatedOrderStatus } from "./services/orderService.js";
 import { InitializeWebSocket } from "./websocket.js";
 
 const app = express();
@@ -70,12 +70,25 @@ app.post("/rpc", async (req, res) => {
         result = await listOrders(db, params);
         return res.json(jsonRpcSuccessResponse(id, result));
 
+      case "acceptOrder":
+        result = await acceptOrder(db, params)
+
+
+        return res.json(jsonRpcSuccessResponse(id, result));
+
+      case "updateOrderStatus":
+        result = await updatedOrderStatus(db, params)
+
+        
+        return res.json(jsonRpcSuccessResponse(id, result))
+
       default:
         return res
           .status(400)
           .json(jsonRpcErrorResponse(-32601, "Method not found", id));
     }
   } catch (error) {
+    console.log("error in backend", error)
     return res
       .status(500)
       .json(jsonRpcErrorResponse(-32000, "Server error", id, error.message));

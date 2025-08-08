@@ -17,8 +17,8 @@ export interface IOrder {
 }
 
 export interface IOrderItem {
-  id: number;
+  order_id: number;
   name: string;
   quantity: number;
-  price: number;
+  menu_item_id: string
 }

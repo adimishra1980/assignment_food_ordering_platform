@@ -3,6 +3,7 @@ import { rpcClient } from "../utils/rpcClient";
 import type { IOrder } from "../types/type";
 import { useEffect, useState } from "react";
 import { formatIndianCurrency } from "../utils/formatIndianCurrency";
+import { toast } from "react-toastify";
 
 // Status badge colors
 const statusColors: Record<string, string> = {
@@ -45,39 +46,62 @@ function getNextAction(status: string) {
   }
 }
 
+interface OrderUpdateParams {
+  orderId: number;
+  status: string;
+}
+
 function KitchenDashboard() {
   const isConnected = true; // For UI preview & status
 
-  const [orders, setOrders] = useState<IOrder[]>([])
+  const [orders, setOrders] = useState<IOrder[]>([]);
 
   useEffect(() => {
     async function fetchInitialOrders() {
       try {
         // fetching all the orders
-        const initialOrders = await rpcClient<IOrder[]>('listOrders')
+        const initialOrders = await rpcClient<IOrder[]>("listOrders");
         // only get orders that are not completed
-        const activeOrders = initialOrders.filter((order) => order.status !== 'COMPLETED')
-        setOrders(activeOrders)
+        const activeOrders = initialOrders.filter(
+          (order) => order.status !== "COMPLETED"
+        );
+        setOrders(activeOrders);
       } catch (error) {
-        console.log('Failed to fetch initial orders:', error)
+        console.log("Failed to fetch initial orders:", error);
+        
       }
     }
 
-    fetchInitialOrders()
-  }, [])
-
+    fetchInitialOrders();
+  }, []);
 
   // Placeholder action handler
-  function handleStatusChange(
+  const handleStatusChange = async (
     orderId: number,
-    status: string,
+    nextStatus: string,
     actionType: string
-  ) {
-    // Implement actual RPC call here
-    alert(
-      `Would call "${actionType}" RPC for order #${orderId} to advance to "${status}"`
-    );
-  }
+  ) => {
+    try {
+      // The 'actionType' variable ('acceptOrder' or 'updateOrderStatus')
+
+      const updatedOrder = await rpcClient<IOrder, OrderUpdateParams>(
+        actionType,
+        {
+          orderId,
+          status: nextStatus,
+        }
+      );
+      console.log("updatedOrder", updatedOrder);
+
+      // updating the local state
+      setOrders((prevOrders) =>
+        prevOrders.map((order) => (order.id === orderId ? updatedOrder : order))
+      );
+    } catch (error) {
+      console.error(`Failed to ${actionType} for order ${orderId}:`, error);
+      toast.error("Failed to update order status. Please try again.");
+    }
+  };
 
   return (
     <div>
@@ -130,7 +154,7 @@ function KitchenDashboard() {
                         {order.customer_name} ({order.customer_phone})
                       </p>
                       <p className="text-gray-700">
-                        <span className="font-medium">Total:</span> {" "}
+                        <span className="font-medium">Total:</span>{" "}
                         {formatIndianCurrency(order.total_amount)}
                       </p>
                       <p className="text-gray-600 text-sm">
@@ -144,7 +168,7 @@ function KitchenDashboard() {
                         </p>
                         <ul className="list-disc pl-6 text-gray-700">
                           {order.items.map((item) => (
-                            <li key={item.id}>
+                            <li key={item.menu_item_id}>
                               {item.name}{" "}
                               <span className="text-gray-500">
                                 x {item.quantity}
@@ -190,5 +214,4 @@ function KitchenDashboard() {
   );
 }
 
-
-export default KitchenDashboard
+export default KitchenDashboard;

@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 8000
 
 # The command to start your application
-CMD [ "node", "src/index.js" ]
+CMD [ "node", "src/app.js" ]

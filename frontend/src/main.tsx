@@ -10,14 +10,11 @@ import { Provider } from "react-redux";
 import CartPage from "./pages/CartPage.tsx";
 import CheckoutPage from "./pages/CheckoutPage.tsx";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
-  },
-  {
-    path: "/kitchen",
-    element: <KitchenDashboardPage />,
   },
   {
     path: "/order/:orderId",
@@ -30,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/checkout",
     element: <CheckoutPage/>
+  },
+  {
+    path: "/kitchen/dashboard",
+    element: <KitchenDashboardPage/>
   }
 ]);
 

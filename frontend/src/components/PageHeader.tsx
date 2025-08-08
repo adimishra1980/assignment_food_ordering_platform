@@ -24,8 +24,8 @@ const PageHeader = () => {
               </a>
             </li>
             <li>
-              <a href="/menu" className="nav-link">
-                Menu
+              <a href="/kitchen/dashboard" className="nav-link">
+                Kitchen
               </a>
             </li>
             <li>

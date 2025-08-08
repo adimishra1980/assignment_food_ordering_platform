@@ -18,6 +18,7 @@ import {
   updatedOrderStatus,
 } from "./services/orderService.js";
 import { InitializeWebSocket } from "./websocket.js";
+import { confirmPayment } from "./services/paymentService.js";
 
 const app = express();
 // Create HTTP server and bind Express app
@@ -86,6 +87,11 @@ app.post("/rpc", async (req, res) => {
 
       case "getOrderStatus":
         result = await getOrderStatus(db, { orderId: params.orderId });
+        return res.json(jsonRpcSuccessResponse(id, result));
+
+      case "confirmPayment":
+        result = await confirmPayment(db, { orderId: params.orderId });
+        broadcast(wss, { type: "order_updated", payload: result });
         return res.json(jsonRpcSuccessResponse(id, result));
 
       default:

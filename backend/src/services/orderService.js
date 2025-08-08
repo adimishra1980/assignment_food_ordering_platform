@@ -1,6 +1,6 @@
 import { jsonRpcErrorResponse } from "../utils/jsonRpcResponse.js";
 
-async function getOrderWithItems(orderId, trx = db) {
+export async function getOrderWithItems(orderId, trx = db) {
   const order = await trx("orders").where({ id: orderId }).first();
   if (!order) return {};
 

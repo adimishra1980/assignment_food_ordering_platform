@@ -10,7 +10,12 @@ import http from "http";
 import { WebSocketServer } from "ws";
 
 import { getMenu } from "./services/menuService.js";
-import { acceptOrder, listOrders, placeOrder, updatedOrderStatus } from "./services/orderService.js";
+import {
+  acceptOrder,
+  listOrders,
+  placeOrder,
+  updatedOrderStatus,
+} from "./services/orderService.js";
 import { InitializeWebSocket } from "./websocket.js";
 
 const app = express();
@@ -33,7 +38,7 @@ app.use(express.json({ limit: "16kb" }));
 
 // Helper function to broadcast messages
 function broadcast(wss, message) {
-  wss.clients.forEach((client) => {
+  wss.clients?.forEach((client) => {
     if (client.readyState === client.OPEN) {
       // WebSocket.OPEN
       client.send(JSON.stringify(message));
@@ -60,10 +65,8 @@ app.post("/rpc", async (req, res) => {
 
       case "placeOrder":
         result = await placeOrder(db, params);
-
         // Broadcast new order event after saving order to DB
-        broadcast({type: "order_created", payload: result})
-
+        broadcast(wss, { type: "order_created", payload: result });
         return res.json(jsonRpcSuccessResponse(id, result));
 
       case "listOrders":
@@ -71,16 +74,14 @@ app.post("/rpc", async (req, res) => {
         return res.json(jsonRpcSuccessResponse(id, result));
 
       case "acceptOrder":
-        result = await acceptOrder(db, params)
-
-
+        result = await acceptOrder(db, params);
+        broadcast(wss, { type: "order_updated", payload: result });
         return res.json(jsonRpcSuccessResponse(id, result));
 
       case "updateOrderStatus":
-        result = await updatedOrderStatus(db, params)
-
-        
-        return res.json(jsonRpcSuccessResponse(id, result))
+        result = await updatedOrderStatus(db, params);
+        broadcast(wss, { type: "order_updated", payload: result });
+        return res.json(jsonRpcSuccessResponse(id, result));
 
       default:
         return res
@@ -88,7 +89,7 @@ app.post("/rpc", async (req, res) => {
           .json(jsonRpcErrorResponse(-32601, "Method not found", id));
     }
   } catch (error) {
-    console.log("error in backend", error)
+    console.log("error in backend", error);
     return res
       .status(500)
       .json(jsonRpcErrorResponse(-32000, "Server error", id, error.message));
@@ -100,4 +101,4 @@ app.get("/health", (req, res) => {
   res.status(200).send({ status: "OK" });
 });
 
-export  {app, server};
+export { app, server };

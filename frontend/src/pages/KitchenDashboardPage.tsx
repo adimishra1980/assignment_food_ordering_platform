@@ -52,8 +52,7 @@ interface OrderUpdateParams {
 }
 
 function KitchenDashboard() {
-  const isConnected = true; // For UI preview & status
-
+  const [isConnected, setIsConnected] = useState(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   useEffect(() => {
@@ -68,14 +67,65 @@ function KitchenDashboard() {
         setOrders(activeOrders);
       } catch (error) {
         console.log("Failed to fetch initial orders:", error);
-        
       }
     }
 
     fetchInitialOrders();
   }, []);
 
-  // Placeholder action handler
+  // websocket logic
+  useEffect(() => {
+    // step 1: create a websocket connection
+    const ws = new WebSocket("ws://localhost:8000/ws");
+
+    // step 2: define what happens when the connection opens
+    ws.onopen = () => {
+      console.log("WebSocket connection established");
+      setIsConnected(true);
+    };
+
+    // step 3: define what happens when a message is received from the server
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      console.log("received message:", message);
+
+      if (message.type === "order_created") {
+        const newOrder = message.payload.order as IOrder;
+        setOrders((prevOrders) => [...prevOrders, newOrder]);
+        toast.success(`New Order #${newOrder.id} received!`);
+      }
+
+      if (message.type === "order_updated") {
+        const updatedOrder = message.payload as IOrder;
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === updatedOrder.id ? updatedOrder : order
+          )
+        );
+        toast.info(
+          `Order #${updatedOrder.id} status updated to ${updatedOrder.status}`
+        );
+      }
+    };
+
+    // step 4: define what happens when the connection closes
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+      setIsConnected(false);
+    };
+
+    // 5. Define an error handler.
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    // step 6: cleanup function to close the websocket connection
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   const handleStatusChange = async (
     orderId: number,
     nextStatus: string,
@@ -84,18 +134,12 @@ function KitchenDashboard() {
     try {
       // The 'actionType' variable ('acceptOrder' or 'updateOrderStatus')
 
-      const updatedOrder = await rpcClient<IOrder, OrderUpdateParams>(
+      await rpcClient<IOrder, OrderUpdateParams>(
         actionType,
         {
           orderId,
           status: nextStatus,
         }
-      );
-      console.log("updatedOrder", updatedOrder);
-
-      // updating the local state
-      setOrders((prevOrders) =>
-        prevOrders.map((order) => (order.id === orderId ? updatedOrder : order))
       );
     } catch (error) {
       console.error(`Failed to ${actionType} for order ${orderId}:`, error);
@@ -167,7 +211,7 @@ function KitchenDashboard() {
                           Items:
                         </p>
                         <ul className="list-disc pl-6 text-gray-700">
-                          {order.items.map((item) => (
+                          {order.items?.map((item) => (
                             <li key={item.menu_item_id}>
                               {item.name}{" "}
                               <span className="text-gray-500">

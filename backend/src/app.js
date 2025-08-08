@@ -12,6 +12,7 @@ import { WebSocketServer } from "ws";
 import { getMenu } from "./services/menuService.js";
 import {
   acceptOrder,
+  getOrderStatus,
   listOrders,
   placeOrder,
   updatedOrderStatus,
@@ -81,6 +82,10 @@ app.post("/rpc", async (req, res) => {
       case "updateOrderStatus":
         result = await updatedOrderStatus(db, params);
         broadcast(wss, { type: "order_updated", payload: result });
+        return res.json(jsonRpcSuccessResponse(id, result));
+
+      case "getOrderStatus":
+        result = await getOrderStatus(db, { orderId: params.orderId });
         return res.json(jsonRpcSuccessResponse(id, result));
 
       default:

@@ -133,3 +133,13 @@ export const updatedOrderStatus = async (db, { orderId, status }) => {
 
   return getOrderWithItems(updatedOrder.id, db);
 };
+
+export const getOrderStatus = async (db, { orderId }) => {
+  const order = await getOrderWithItems(orderId, db);
+  if (!order) {
+    return res
+      .status(404)
+      .json(jsonRpcErrorResponse(-32004, "Order not found", id));
+  }
+  return order
+};

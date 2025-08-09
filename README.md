@@ -15,9 +15,11 @@ This project is fully containerized with Docker. To run it, you will need **Git*
     cd <your-project-folder>
     ```
 
-2.  **Create the Backend Environment File:**
+2.  **Create the Environment File:**
 
     - Navigate to the `/backend` folder.
+    - Copy the `env.sample` file to a new file named `.env`.
+    - Navigate to the `/frontend` folder.
     - Copy the `env.sample` file to a new file named `.env`.
 
 3.  **Build and Run with Docker Compose:**
@@ -120,6 +122,5 @@ The technology stack for the Food Ordering Platform was selected based on balanc
 - PostgreSQL → ACID compliance, strong constraint enforcement
 
 - Docker & Compose → Consistent dev/test/prod environments
-
 
 This technology stack ensures a scalable, maintainable, and high-performing platform.

@@ -20,8 +20,11 @@ services:
       - postgres
     env_file:
       - ./backend/.env
+    environment:
+      - NODE_ENV=development
     volumes:
       - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
     stdin_open: true
     tty: true
 
@@ -35,8 +38,11 @@ services:
       - backend
     env_file:
       - ./frontend/.env
+    environment:
+      - NODE_ENV=development
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     stdin_open: true
     tty: true
 

@@ -6,30 +6,25 @@ FROM node:20-slim
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# --- Best Practice: Non-Root User ---
-# Create a non-root user for security purposes. Running as root is a risk.
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 node
+# --- Best Practice: Use Existing Non-Root User ---
+# The node:20-slim image already comes with a 'node' user. We will use it.
 USER node
 
-# --- Best Practice: Optimized Layer Caching ---
-# Copy package files from the 'backend' subfolder of the build context.
-# This is crucial because your docker-compose.yml builds from the project root.
-COPY --chown=node:nodejs backend/package.json ./
-COPY --chown=node:nodejs backend/package-lock.json ./
+# Copy package files from the 'backend' subfolder.
+# --chown=node:node gives the 'node' user ownership of these files.
+COPY --chown=node:node backend/package.json ./
+COPY --chown=node:node backend/package-lock.json ./
 
-# Use 'npm ci' which is faster and more reliable for production builds using package-lock.json
+# Use 'npm ci' which is faster and more reliable for production builds.
 RUN npm ci --only=production
 
-# Copy the rest of your application source code from the 'backend' subfolder
-COPY --chown=node:nodejs backend/ .
+# Copy the rest of your application source code.
+COPY --chown=node:node backend/ .
 
-# Expose the port your app runs on
+# Expose the port your app runs on.
 EXPOSE 8000
 
-# --- Best Practice: Health Check ---
-# This tells Docker how to check if your application is running correctly.
-# It tries to access the /health endpoint every 30 seconds.
+# Health check (remains the same)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 

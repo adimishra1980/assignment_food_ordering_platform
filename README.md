@@ -21,7 +21,7 @@ This project is fully containerized with Docker. To run it, you will need **Git*
     - Copy the `env.sample` file to a new file named `.env`.
 
 3.  **Build and Run with Docker Compose:**
-    From the project's **root directory**, run the following single command:
+    From the project's **root directory**, run the following single command but before doing this make sure you docker-desktop is running:
 
     ```sh
     docker-compose up --build

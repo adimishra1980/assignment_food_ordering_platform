@@ -18,13 +18,8 @@ services:
   # Backend Service
   backend:
     build:
-<<<<<<< HEAD
-      context: .
-      dockerfile: backend/Dockerfile
-=======
       context: . # Use the entire project root as the build context
       dockerfile: backend/Dockerfile # Specify the path to the Dockerfile
->>>>>>> 823132459035bca82e3c5901572d38733d62d823
     ports:
       - "8000:8000"
     depends_on:

@@ -18,8 +18,7 @@ USER node
 COPY --chown=node:nodejs backend/package.json ./
 COPY --chown=node:nodejs backend/package-lock.json ./
 
-# Use 'npm ci' which is faster and more reliable for production builds using package-lock.json
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy the rest of your application source code from the 'backend' subfolder
 COPY --chown=node:nodejs backend/ .

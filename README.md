@@ -29,7 +29,12 @@ This project is fully containerized with Docker. To run it, you will need **Git*
 
     This command will build the images for the frontend and backend, start all three containers, and run the database migrations.
 
-4.  Open your browser:
+4.  Seed the database with sample data
+    After containers are up, run:
+
+        docker-compose exec backend npm run seed
+
+5.  Open your browser:
 
 - Frontend UI: `http://localhost:5173`
 - Backend RPC & API: `http://localhost:8000/rpc`
@@ -102,25 +107,19 @@ http://localhost:8000/rpc
 
 The technology stack for the Food Ordering Platform was selected based on balancing developer productivity, system performance, maintainability, scalability, and feature requirements.
 
-- **React 18 and Tailwind CSS:**  
-  Enables rapid, responsive UI development using composable components and utility-first styling. Tailwind provides consistency and avoids CSS bloat.
+- React 18 + Tailwind CSS → Rapid UI development with utility-first styling
 
-- **State Management (Redux Toolkit / Zustand):**  
-  Redux Toolkit preferred for predictable and debuggable global state.
+- Redux Toolkit → Predictable, debuggable global state
 
-- **Backend Node.js with Express:**  
-  Lightweight, widely-used framework with strong ecosystem support for JSON-RPC and WebSocket.
+- Node.js + Express → Lightweight, widely supported
 
-- **JSON-RPC 2.0 instead of REST:**  
-  Chosen for strict specification, standardized error handling, and efficient batch request support. Improves client-server contract clarity.
+- JSON-RPC 2.0 → Strict spec, clear error handling, supports batching
 
-- **WebSocket (ws):**  
-  Raw ws library used to control heartbeat and backpressure. Enables low-latency push notifications for real-time updates.
+- WebSocket (ws) → Low-latency, fine control over heartbeat/backpressure
 
-- **PostgreSQL:**  
-  Selected for its ACID compliance and ability to enforce complex constraints critical for order workflow.
+- PostgreSQL → ACID compliance, strong constraint enforcement
 
-- **Containerization (Docker & Compose):**  
-  Ensures consistent environment across development, testing, and deployment.
+- Docker & Compose → Consistent dev/test/prod environments
+
 
 This technology stack ensures a scalable, maintainable, and high-performing platform.

@@ -1,45 +1,42 @@
-# The 'version' tag is obsolete and can be removed.
+version: "3.8"
 
 services:
-  # Postgres Database Service
   postgres:
     image: postgres:15
-    # It's more reliable to define the postgres-specific variables here
-    # as the postgres image looks for these exact names.
-    environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=food_ordering_app
+    env_file:
+      - ./backend/.env
     ports:
       - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  # Backend Service
   backend:
     build:
-      context: . # Use the entire project root as the build context
-      dockerfile: backend/Dockerfile # Specify the path to the Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - postgres
     env_file:
       - ./backend/.env
-    # This volume is for development: it syncs your local src folder
-    # with the container for instant code updates without rebuilding.
     volumes:
-      - ./backend/src:/usr/src/app/src
+      - ./backend:/usr/src/app
+    stdin_open: true
+    tty: true
 
-  # Frontend Service
   frontend:
     build:
-      context: . # Use the entire project root as the build context
-      dockerfile: frontend/Dockerfile # Specify the path to the Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "5173:80"
+      - "5173:5173"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/app
+    stdin_open: true
+    tty: true
 
 volumes:
   db_data:

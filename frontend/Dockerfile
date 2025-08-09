@@ -1,22 +1,17 @@
-# frontend/Dockerfile
+# Minimal build & serve using Node
+FROM node:20-slim
 
-# --- Build Stage ---
-FROM node:20-slim AS build
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
-# Copy source and build
+# Copy all source
 COPY . .
-RUN npm run build
 
-# --- Production Stage ---
-FROM nginx:stable-alpine
+# Expose the Vite dev port
+EXPOSE 5173
 
-# Copy build output
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Run the Vite development server
+CMD ["npm", "run", "dev", "--", "--host"]

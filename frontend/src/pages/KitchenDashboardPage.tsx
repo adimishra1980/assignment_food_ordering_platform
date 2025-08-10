@@ -76,7 +76,7 @@ function KitchenDashboard() {
   // websocket logic
   useEffect(() => {
     // step 1: create a websocket connection
-    const ws = new WebSocket("ws://localhost:8000/ws");
+    const ws = new WebSocket(import.meta.env.VITE_WS_URL);
 
     // step 2: define what happens when the connection opens
     ws.onopen = () => {

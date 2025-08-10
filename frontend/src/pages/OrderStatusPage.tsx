@@ -64,7 +64,7 @@ export default function OrderStatus() {
   useEffect(() => {
     if (!orderId) return;
 
-    const ws = new WebSocket("ws://localhost:8000/ws");
+    const ws = new WebSocket(import.meta.env.VITE_WS_URL);
 
     ws.onopen = () => {
       setIsConnected(true);

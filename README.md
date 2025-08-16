@@ -31,9 +31,10 @@ This project is fully containerized with Docker. To run it, you will need **Git*
 
     This command will build the images for the frontend and backend, start all three containers, and run the database migrations.
 
-4.  Seed the database with sample data
+4.  Run the migrations and seed the database with sample data
     After containers are up, run:
 
+        docker-compose exec backend npm run migrate
         docker-compose exec backend npm run seed
 
 5.  Open your browser:

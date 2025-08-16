@@ -28,6 +28,8 @@ const server = http.createServer(app);
 const wss = InitializeWebSocket(server);
 
 // Initialize Knex to connect to the database
+// TODO: in production, don't use the development config
+// decide with environment variables for confing in production
 const db = knex(knexConfig.development);
 
 app.use(

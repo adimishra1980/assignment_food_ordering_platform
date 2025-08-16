@@ -1,4 +1,28 @@
-# backend/.dockerignore
+# Node.js dependencies
 node_modules
-.env
 npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Environment files
+.env
+.env.*   # Ignore all env variants (e.g., .env.development, .env.local)
+
+# Logs
+logs
+*.log
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Build output (if any)
+dist
+build
+coverage
+
+# Docker / Compose files (not needed inside container)
+docker-compose.yml
+Dockerfile

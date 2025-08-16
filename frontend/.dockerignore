@@ -1,5 +1,26 @@
-# frontend/.dockerignore
+# Dependencies
 node_modules
-.env
-dist
 npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Environment files
+.env
+.env.*   # Ignore all env variants (like .env.local, .env.development)
+
+# Build output (these are generated, not source)
+dist
+build
+
+# Logs
+logs
+*.log
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Coverage / testing
+coverage

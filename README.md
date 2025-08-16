@@ -34,8 +34,8 @@ This project is fully containerized with Docker. To run it, you will need **Git*
 4.  Run the migrations and seed the database with sample data
     After containers are up, run:
 
-        docker-compose exec backend npm run migrate
-        docker-compose exec backend npm run seed
+        docker-compose exec backend npx knex migrate:latest
+        docker-compose exec backend npx knex seed:run
 
 5.  Open your browser:
 

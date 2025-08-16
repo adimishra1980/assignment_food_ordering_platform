@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15
@@ -8,49 +6,52 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: food_ordering_app
     ports:
-      - "5433:5432" # expose Postgres to host on port 5433
+      - "5433:5432"  # host port 5433 -> container port 5432
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: always
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000" # backend exposed to host
+      - "8000:8000"
     depends_on:
       - postgres
     env_file:
       - ./backend/.env
     environment:
-      - NODE_ENV=development
-      - DB_HOST=postgres   # important: docker service name
-      - DB_PORT=5432
+      NODE_ENV: development
+      DB_HOST: postgres    # override for Docker
+      DB_PORT: 5432        # container internal port
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     stdin_open: true
     tty: true
+    restart: always
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:5173" # frontend exposed to host
+      - "5173:5173"
     depends_on:
       - backend
     env_file:
       - ./frontend/.env
     environment:
-      - NODE_ENV=development
-      - VITE_API_URL=http://backend:8000/rpc # docker service name
-      - VITE_WS_URL=ws://backend:8000/ws     # docker service name
+      NODE_ENV: development
+      VITE_API_URL: http://backend:8000/rpc
+      VITE_WS_URL: ws://backend:8000/ws
     volumes:
       - ./frontend:/app
       - /app/node_modules
     stdin_open: true
     tty: true
+    restart: always
 
 volumes:
   db_data:
